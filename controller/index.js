@@ -106,8 +106,10 @@ module.exports = yeoman.Base.extend({
           tempPath = tempPath.substr(0, tempPath.length - 1);
         }
 
+        this.controllerViewName = this.controllerViewState.split('.').join('-');
+
         this.controllerViewPath = tempPath;
-        this.controllerViewPathPartial = '/views' + this.controllerViewPath + '/' + this.controllerName + '.html';
+        this.controllerViewPathPartial = '/views' + this.controllerViewPath + '/' + this.controllerViewName + '.html';
         this.controllerViewPathFull = '/app' + this.controllerViewPathPartial;
 
         this.log(
@@ -210,7 +212,7 @@ module.exports = yeoman.Base.extend({
   },
 
   end: function () {
-    this.log('Run ' + chalk.red('grunt serve') + ' to see the app in action or ' + chalk.blue('grunt build') + ' when you are ready to deploy it');
+    this.log('Run ' + chalk.green('grunt serve') + ' to see the app in action or ' + chalk.blue('grunt build') + ' when you are ready to deploy it');
     this.log('Visit our blog at ' + chalk.blue('https://medium.com/monits-blog'));
   }
 });
