@@ -3,7 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
 
@@ -19,7 +19,7 @@ module.exports = yeoman.generators.Base.extend({
     this.log(yosay(
       'Welcome to the brilliant ' + chalk.red('AngularRequireFullstack') + ' generator! by ' + chalk.blue('MONITS')
     ));
-  
+
     this.log(
       'I am going to scaffold a directive for you.'
     );
@@ -42,14 +42,14 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    directive: function () { 
+    directive: function () {
       // Directives
       this.fs.copyTpl(
         this.templatePath('/_directiveTemplate.js'),
         this.destinationPath('/app/scripts/directives/' + this.directiveName + '.js'),
         this
       );
-      
+
     }
   },
 

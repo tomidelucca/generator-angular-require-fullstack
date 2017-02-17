@@ -3,7 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
 
@@ -46,17 +46,47 @@ module.exports = yeoman.generators.Base.extend({
 
     },
 
-    // We need to ask the user for the route of this controller before procceding
-    promptingForRoute: function() {
+    // We need to ask the user for the state of this controller before procceding
+    promptingForState: function() {
 
       var done = this.async();
 
       this.prompt({
         type: 'input',
-        name: 'controllerViewRoute',
-        message: 'The route for the view in this controller',
-        validate: function (routeName) {
-          if (routeName.length > 0) {
+        name: 'controllerViewState',
+        message: 'The state for the view in this controller',
+        validate: function (stateName) {
+          if (stateName.length > 0) {
+            return true;
+          }
+
+          return 'You need to enter a valid state name';
+        }
+
+      }, function (answers) {
+
+        this.controllerViewState = answers.controllerViewState.trim();
+
+        this.log(
+          chalk.gray('  (btw, your default view state will be: ' + chalk.bold(this.controllerViewState) + ')')
+        );
+
+        done();
+      }.bind(this));
+
+    },
+
+    // We need to ask the user for the url of this controller before procceding
+    promptingForPath: function() {
+
+      var done = this.async();
+
+      this.prompt({
+        type: 'input',
+        name: 'controllerViewPath',
+        message: 'The path for the view in this controller',
+        validate: function (path) {
+          if (path.length > 0) {
             return true;
           }
 
@@ -65,23 +95,23 @@ module.exports = yeoman.generators.Base.extend({
 
       }, function (answers) {
 
-        var tempRoute = answers.controllerViewRoute.trim();
+        var tempPath = answers.controllerViewPath.trim();
 
         // Lets add slashes at the front and remove the slash from the back of the route (if there arent)
-        if (tempRoute[0] !== '/') {
-          tempRoute = '/' + tempRoute;
+        if (tempPath[0] !== '/') {
+          tempPath = '/' + tempPath;
         }
 
-        if (tempRoute[tempRoute.length - 1] === '/') {
-          tempRoute = tempRoute.substr(0, tempRoute.length - 1);
+        if (tempPath[tempPath.length - 1] === '/') {
+          tempPath = tempPath.substr(0, tempPath.length - 1);
         }
 
-        this.controllerViewRoute = tempRoute;
-        this.controllerViewRoutePartial = '/views' + this.controllerViewRoute + '/' + this.controllerName + '.html';
-        this.controllerViewRouteFull = '/app' + this.controllerViewRoutePartial;
+        this.controllerViewPath = tempPath;
+        this.controllerViewPathPartial = '/views' + this.controllerViewPath + '/' + this.controllerName + '.html';
+        this.controllerViewPathFull = '/app' + this.controllerViewPathPartial;
 
         this.log(
-          chalk.gray('  (btw, your default view will be located in: ' + chalk.bold(this.controllerViewRouteFull) + ')')
+          chalk.gray('  (btw, your default view will be located in: ' + chalk.bold(this.controllerViewPathFull) + ')')
         );
 
         done();
@@ -103,16 +133,16 @@ module.exports = yeoman.generators.Base.extend({
       // Controller View Route
       this.fs.copyTpl(
         this.templatePath('/views/_viewControllerTemplate.html'),
-        this.destinationPath(this.controllerViewRouteFull),
+        this.destinationPath(this.controllerViewPathFull),
         this
       );
 
     },
 
-    updatingRoutesJs: function() {
+    updatingStatesJs: function() {
 
       var hook = '/* ===== yeoman hook ===== */';
-      var path = this.destinationPath('/app/scripts/routes.js');
+      var path = this.destinationPath('/app/scripts/states.js');
 
       // route.js exists? If not, we can't update it
       if (!this.fs.exists(path)) {
@@ -120,7 +150,7 @@ module.exports = yeoman.generators.Base.extend({
           chalk.red(
             chalk.bold(
               'Yikes! I can\'t find ' +
-              chalk.underline('/app/scripts/routes.js') + '. ' +
+              chalk.underline('/app/scripts/states.js') + '. ' +
               'Thus I can\'t make my splendid update :(\n'
             )
           )
@@ -135,18 +165,18 @@ module.exports = yeoman.generators.Base.extend({
       // We need a healthy hook
       if (file.indexOf(hook) === -1) {
         this.log(
-          chalk.red('Oops... I couldn\'t update routes.js because I can\'t find my hook :(')
+          chalk.red('Oops... I couldn\'t update states.js because I can\'t find my hook :(')
         );
 
         this.log(
-          chalk.gray('  (try adding \'' + hook + '\' after the last item inside the routes object in routes.js)') + '\n'
+          chalk.gray('  (try adding \'' + hook + '\' after the last item inside the states object in states.js)') + '\n'
         );
 
         return;
       }
 
       // If the key doesnt exist, we add our view to routes.js
-      if (file.indexOf(this.controllerViewRoute) === -1) {
+      if (file.indexOf(this.controllerViewState) === -1) {
 
         var tab = '    ';
 
@@ -159,8 +189,10 @@ module.exports = yeoman.generators.Base.extend({
         //
         // (the last line -hook- is added once again to enable further uses)
         var newBlockToAppend =
-          '\'' + this.controllerViewRoute + '\': {\n' +
-          tab + tab + tab + tab + 'templateUrl: \'' + this.controllerViewRoutePartial + '\',\n' +
+          '\'' + this.controllerViewState + '\': {\n' +
+          tab + tab + tab + tab + 'name: \'' + this.controllerViewState + '\',\n' +
+          tab + tab + tab + tab + 'url: \'' + this.controllerViewPath + '\',\n' +
+          tab + tab + tab + tab + 'templateUrl: \'' + this.controllerViewPathPartial + '\',\n' +
           tab + tab + tab + tab + 'controller: \'' + this.controllerName + '\'\n' +
           tab + tab + tab + '}\n' +
           tab + tab + tab + hook;

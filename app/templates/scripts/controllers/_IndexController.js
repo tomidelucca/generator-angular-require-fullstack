@@ -1,7 +1,7 @@
 'use strict';
 define(['<%= appname %>'], function(<%= appname %>) {
 
-	<%= appname %>.controller('IndexCtrl', function($scope) {
+	<%= appname %>.controller('IndexController', function($scope) {
 		$scope.welcomeText = 'Welcome to your <%= appname %> page';
 	});
 });

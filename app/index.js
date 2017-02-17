@@ -19,7 +19,7 @@ module.exports = yeoman.generators.Base.extend({
     this.log(yosay(
       'Welcome to the brilliant ' + chalk.red('AngularRequireFullstack') + ' generator! by ' + chalk.blue('MONITS')
     ));
-  
+
     this.log(
       'I will generate a fullstack structure based on AngularJS + RequireJS, alongside some must-have modules'
     );
@@ -79,8 +79,8 @@ module.exports = yeoman.generators.Base.extend({
         this
       );
       this.fs.copyTpl(
-        this.templatePath('/scripts/_routes.js'),
-        this.destinationPath('/app/scripts/routes.js'),
+        this.templatePath('/scripts/_states.js'),
+        this.destinationPath('/app/scripts/states.js'),
         this
       );
       this.fs.copy(
@@ -100,13 +100,13 @@ module.exports = yeoman.generators.Base.extend({
 
       // Controllers
       this.fs.copyTpl(
-        this.templatePath('/scripts/controllers/_IndexCtrl.js'),
-        this.destinationPath('/app/scripts/controllers/IndexCtrl.js'),
+        this.templatePath('/scripts/controllers/_IndexController.js'),
+        this.destinationPath('/app/scripts/controllers/IndexController.js'),
         this
       );
       this.fs.copyTpl(
-        this.templatePath('/scripts/controllers/_HomeCtrl.js'),
-        this.destinationPath('/app/scripts/controllers/HomeCtrl.js'),
+        this.templatePath('/scripts/controllers/_HomeController.js'),
+        this.destinationPath('/app/scripts/controllers/HomeController.js'),
         this
       );
 
@@ -179,7 +179,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function () {
-    this.log('Run ' + chalk.red('grunt serve') + ' to see the app in action or ' + chalk.blue('grunt build') + ' when you are ready to deploy it');
+    this.log('Run ' + chalk.green('grunt serve') + ' to see the app in action or ' + chalk.blue('grunt build') + ' when you are ready to deploy it');
     this.log('Visit our blog at ' + chalk.blue('https://medium.com/monits-blog'));
   }
 });

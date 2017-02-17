@@ -6,7 +6,6 @@ require.config({
         'affix': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/affix',
         'alert': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert',
         'angular': '../../bower_components/angular/angular',
-        'angular-route': '../../bower_components/angular-route/angular-route',
         'angular-translate': '../../bower_components/angular-translate/angular-translate',
         'button': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button',
         'bootstrap': '../../bower_components/bootstrap/dist/js/bootstrap',
@@ -23,13 +22,15 @@ require.config({
         'scrollspy': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/scrollspy',
         'tab': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tab',
         'tooltip': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip',
-        'transition': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition'
+        'transition': '../../bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition',
+        'uiRouter': '../../bower_components/angular-ui-router/release/angular-ui-router'
     },
     shim: {
         angular: {
             deps: [
                 'jquery'
-            ]
+            ],
+            exports: 'angular'
         },
         'angular-route': {
             deps: [
@@ -56,6 +57,11 @@ require.config({
             deps: [
                 'angular'
             ]
+        },
+        uiRouter: {
+            deps: [
+                'angular'
+            ]
         }
     },
     packages: [
@@ -72,7 +78,7 @@ if (paths) {
 require([
         'angular',
         '<%= appname %>',
-        'controllers/IndexCtrl'
+        'controllers/IndexController'
     ],
     function() {
         angular.bootstrap(document, ['<%= appname %>']);

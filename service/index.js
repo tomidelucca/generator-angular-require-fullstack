@@ -3,7 +3,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = yeoman.Base.extend({
   initializing: function () {
     this.pkg = require('../package.json');
 
@@ -19,7 +19,7 @@ module.exports = yeoman.generators.Base.extend({
     this.log(yosay(
       'Welcome to the brilliant ' + chalk.red('AngularRequireFullstack') + ' generator! by ' + chalk.blue('MONITS')
     ));
-  
+
     this.log(
       'I am going to scaffold a service for you.'
     );
@@ -42,14 +42,14 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    service: function () { 
+    service: function () {
       // Services
       this.fs.copyTpl(
         this.templatePath('/_serviceTemplate.js'),
         this.destinationPath('/app/scripts/services/' + this.serviceName + '.js'),
         this
       );
-      
+
     }
   },
 

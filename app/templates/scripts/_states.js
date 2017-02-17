@@ -2,11 +2,13 @@
 
 define([], function() {
     return {
-        defaultRoutePath: '/',
-        routes: {
-            '/': {
-                templateUrl: '/views/home.html',
-                controller: 'HomeCtrl'
+        defaultState: 'home',
+        states: {
+            home: {
+              name: 'home',
+              url: '/',
+              templateUrl: '/views/home.html',
+              controller: 'HomeController'
             }
             /* ===== yeoman hook ===== */
             /* Do not remove these commented lines! Needed for auto-generation */

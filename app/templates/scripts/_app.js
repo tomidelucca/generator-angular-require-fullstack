@@ -1,25 +1,26 @@
 'use strict';
-define(['routes',
+define(['states',
 	'services/dependencyResolverFor',
 	'i18n/i18nLoader!',
 	'angular',
-	'angular-route',
+	'uiRouter',
 	'bootstrap',
 	'angular-translate'],
 	function(config, dependencyResolverFor, i18n) {
 		var <%= appname %> = angular.module('<%= appname %>', [
-			'ngRoute',
+			'ui.router',
 			'pascalprecht.translate'
 		]);
 		<%= appname %>
 			.config(
-				['$routeProvider',
-				'$controllerProvider',
+				['$controllerProvider',
 				'$compileProvider',
 				'$filterProvider',
 				'$provide',
 				'$translateProvider',
-				function($routeProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider) {
+				'$stateProvider',
+				'$urlRouterProvider',
+				function($controllerProvider, $compileProvider, $filterProvider, $provide, $translateProvider, $stateProvider, $urlRouterProvider) {
 
 					<%= appname %>.controller = $controllerProvider.register;
 					<%= appname %>.directive = $compileProvider.directive;
@@ -27,17 +28,27 @@ define(['routes',
 					<%= appname %>.factory = $provide.factory;
 					<%= appname %>.service = $provide.service;
 
-					if (config.routes !== undefined) {
-						angular.forEach(config.routes, function(route, path) {
-							$routeProvider.when(path, {templateUrl: route.templateUrl, resolve: dependencyResolverFor(['controllers/' + route.controller]), controller: route.controller, gaPageTitle: route.gaPageTitle});
-						});
-					}
-					if (config.defaultRoutePath !== undefined) {
-						$routeProvider.otherwise({redirectTo: config.defaultRoutePath});
-					}
+					if (config.states !== undefined) {
+            angular.forEach(config.states, function(state) {
+              $stateProvider.state(state.name, {
+                url: state.url,
+                templateUrl: state.templateUrl,
+                resolve: dependencyResolverFor(['controllers/' + state.controller]),
+                controller: state.controller
+              });
+            });
+          }
 
-					$translateProvider.translations('preferredLanguage', i18n);
-					$translateProvider.preferredLanguage('preferredLanguage');
+					if (config.defaultState !== undefined) {
+            $urlRouterProvider.otherwise(function($injector, $location) {
+              var $state = $injector.get('$state');
+              $state.go(config.defaultState);
+            });
+          }
+
+          $translateProvider.translations('preferredLanguage', i18n);
+          $translateProvider.preferredLanguage('preferredLanguage');
+
 				}]);
 		return <%= appname %>;
 	}
