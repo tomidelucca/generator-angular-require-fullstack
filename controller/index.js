@@ -67,60 +67,24 @@ module.exports = yeoman.Base.extend({
 
         this.controllerViewState = answers.controllerViewState.trim();
 
+        var viewPaths = this.controllerViewState.split('.');
+
+        this.controllerViewPath = '/' + viewPaths[viewPaths.length - 1];
+        this.controllerViewPathPartial = '/views' + '/' + viewPaths.join("/") + this.controllerViewPath + '.html';
+        this.controllerViewPathFull = '/app' + this.controllerViewPathPartial;
+
         this.log(
           chalk.gray('  (btw, your default view state will be: ' + chalk.bold(this.controllerViewState) + ')')
+        );
+
+        this.log(
+          chalk.gray('  (btw, your default view path will be: ' + chalk.bold(this.controllerViewPathFull) + ')')
         );
 
         done();
       }.bind(this));
 
     },
-
-    // We need to ask the user for the url of this controller before procceding
-    promptingForPath: function() {
-
-      var done = this.async();
-
-      this.prompt({
-        type: 'input',
-        name: 'controllerViewPath',
-        message: 'The path for the view in this controller',
-        validate: function (path) {
-          if (path.length > 0) {
-            return true;
-          }
-
-          return 'You need to enter a valid path';
-        }
-
-      }, function (answers) {
-
-        var tempPath = answers.controllerViewPath.trim();
-
-        // Lets add slashes at the front and remove the slash from the back of the route (if there arent)
-        if (tempPath[0] !== '/') {
-          tempPath = '/' + tempPath;
-        }
-
-        if (tempPath[tempPath.length - 1] === '/') {
-          tempPath = tempPath.substr(0, tempPath.length - 1);
-        }
-
-        this.controllerViewName = this.controllerViewState.split('.').join('-');
-
-        this.controllerViewPath = tempPath;
-        this.controllerViewPathPartial = '/views' + this.controllerViewPath + '/' + this.controllerViewName + '.html';
-        this.controllerViewPathFull = '/app' + this.controllerViewPathPartial;
-
-        this.log(
-          chalk.gray('  (btw, your default view will be located in: ' + chalk.bold(this.controllerViewPathFull) + ')')
-        );
-
-        done();
-      }.bind(this));
-
-    }
-
   },
 
   writing: {
